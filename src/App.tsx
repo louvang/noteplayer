@@ -4,7 +4,11 @@ import Player from './components/Player';
 function App() {
   return (
     <>
-      <Player src="/videos/code.mp4" />
+      <div className="center-container">
+        <div className="center-item">
+          <Player src="/videos/film-loading.mp4" />
+        </div>
+      </div>
     </>
   );
 }
