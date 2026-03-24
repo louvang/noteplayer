@@ -1,5 +1,74 @@
+.noteplayer-container {
+  position: relative;
+}
+
 .noteplayer {
-  width: auto;
-  max-height: 100%;
   display: block;
+  max-height: 80vh;
+  border-radius: 1rem;
+}
+
+.noteplayer__play-button {
+  position: absolute;
+  top: calc(50% - 40px);
+  left: calc(50% - 40px);
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: ease-in 0.25s;
+
+  img {
+    width: 32px;
+    height: 32px;
+    margin-left: 4px;
+  }
+}
+
+.noteplayer__play-button:hover {
+  background-color: rgba(0, 0, 0, 1);
+  transition: ease-in 0.25s;
+}
+
+.noteplayer__progress-container {
+  position: absolute;
+  bottom: 16px;
+  width: 100%;
+}
+
+.noteplayer__progress-bar {
+  position: relative;
+  background-color: #333;
+  height: 4px;
+  border-radius: 3px;
+  width: calc(100% - 2rem);
+  margin: 0 auto;
+}
+
+.noteplayer__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  height: 4px;
+  border-radius: 3px;
+  width: 0;
+}
+
+.noteplayer__timestamp {
+  position: absolute;
+  top: -40px;
+  left: calc(50% - 15px);
+  width: 30px;
+  background-color: #ffffffbb;
+  padding: 0.325rem;
+  color: #000;
+  text-align: center;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  display: none;
 }
