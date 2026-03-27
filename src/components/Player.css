@@ -43,33 +43,44 @@
 
 .noteplayer__progress-container {
   position: absolute;
-  bottom: 16px;
+  bottom: 0;
   width: 100%;
 }
 
-.noteplayer__progress-bar {
+.noteplayer__progress-area {
   position: relative;
-  background-color: #333;
-  height: 4px;
-  border-radius: 3px;
   width: calc(100% - 2rem);
   margin: 0 auto;
+  height: 32px;
 }
 
-.noteplayer__progress {
+.noteplayer__progress-base {
   position: absolute;
-  top: 0;
+  top: calc(50% - 2px);
   left: 0;
-  background-color: #fff;
   height: 4px;
   border-radius: 3px;
-  width: 0;
+}
+
+.noteplayer__progress-bg {
+  background-color: #333;
+  width: 100%;
+}
+
+.noteplayer__progress-hovered {
+  background-color: #fff;
+  opacity: 0.4;
+  width: 75%;
+}
+
+.noteplayer__progress-elapsed {
+  background-color: #fff;
+  width: 110px;
 }
 
 .noteplayer__timestamp {
   position: absolute;
-  top: -40px;
-  left: calc(50% - 15px);
+  top: -20px;
   background-color: #ffffffbb;
   padding: 0.325rem;
   color: #000;

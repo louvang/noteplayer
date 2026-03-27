@@ -13,6 +13,9 @@ function Player({ src }: PlayerProps) {
   const [playBtnHidden, setPlayBtnHidden] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [elapsedLocation, setElapsedLocation] = useState(0);
+  const [hoverLocation, setHoverLocation] = useState(0);
+  const [showTimestamp, setShowTimestamp] = useState('none');
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -55,14 +58,41 @@ function Player({ src }: PlayerProps) {
     return formattedTime;
   };
 
-  const updateTimestamp = () => {
+  const handleTimeUpdate = () => {
     if (!videoRef.current) return;
     setCurrentTime(videoRef.current.currentTime);
+
+    // convert to percentage for css state change
+    let elapsedPercent = (videoRef.current.currentTime / duration) * 100;
+    setElapsedLocation(elapsedPercent);
   };
 
   const updateDuration = () => {
     if (!videoRef.current) return;
     setDuration(videoRef.current.duration);
+  };
+
+  const goToSeekLocation = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!videoRef.current) return;
+    let rect = e.currentTarget.getBoundingClientRect();
+
+    // convert to the new time user wants to jump to
+    let seekLoc = e.clientX - rect.left;
+    let newTime = (seekLoc / rect.width) * duration;
+
+    // now jump
+    videoRef.current.currentTime = newTime;
+  };
+
+  const updateHoverLocation = (e: React.MouseEvent<HTMLDivElement>) => {
+    let rect = e.currentTarget.getBoundingClientRect();
+    let hoveredLoc = e.clientX - rect.left;
+    let hoverToTime = (hoveredLoc / rect.width) * 100;
+    setHoverLocation(hoverToTime);
+  };
+
+  const resetHoverLocation = () => {
+    setHoverLocation(0);
   };
 
   return (
@@ -73,7 +103,7 @@ function Player({ src }: PlayerProps) {
           src={src}
           className="noteplayer"
           onClick={togglePlay}
-          onTimeUpdate={updateTimestamp}
+          onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={updateDuration}
           playsInline
         />
@@ -85,10 +115,33 @@ function Player({ src }: PlayerProps) {
         </div>
 
         <div className="noteplayer__progress-container">
-          <div className="noteplayer__progress-bar">
-            <div className="noteplayer__progress"> </div>
-            <div className="noteplayer__timestamp">
-              {formatTimestamp(currentTime)} / {formatTimestamp(duration)}
+          <div
+            className="noteplayer__progress-area"
+            onMouseMove={updateHoverLocation}
+            onMouseLeave={resetHoverLocation}
+            onClick={goToSeekLocation}
+          >
+            <div className="noteplayer__progress-bg"> </div>
+            <div className="noteplayer__progress-base noteplayer__progress-bg">
+              {' '}
+            </div>
+            <div
+              className="noteplayer__progress-base noteplayer__progress-hovered"
+              style={{ width: hoverLocation + '%' }}
+            >
+              {' '}
+            </div>
+            <div
+              className="noteplayer__progress-base noteplayer__progress-elapsed"
+              style={{ width: elapsedLocation + '%' }}
+            >
+              {' '}
+            </div>
+            <div
+              className="noteplayer__timestamp"
+              style={{ display: showTimestamp }}
+            >
+              {formatTimestamp(currentTime)}
             </div>
           </div>
         </div>
