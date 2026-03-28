@@ -16,8 +16,9 @@ function Player({ src }: PlayerProps) {
   const [elapsedLocation, setElapsedLocation] = useState(0);
   const [hoverLocation, setHoverLocation] = useState(0);
   const [hoverTime, setHoverTime] = useState(0);
-  const [showTimestamp, setShowTimestamp] = useState('none');
+  const [showTimestamp, setShowTimestamp] = useState(false);
   const [timestampPosition, setTimestampPosition] = useState(0);
+  const [isSeeking, setIsSeeking] = useState(false);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -76,9 +77,11 @@ function Player({ src }: PlayerProps) {
   const handleTimelineClick = () => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = hoverTime;
+    console.log('hi i rendered');
   };
 
   const updateHoverLocation = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!videoRef.current) return;
     if (!timestampRef.current) return;
 
     let rect = e.currentTarget.getBoundingClientRect();
@@ -92,13 +95,26 @@ function Player({ src }: PlayerProps) {
     let timeStampLoc = seekLoc - timestampRef.current.offsetWidth / 2;
 
     setHoverTime(newTime);
-    setShowTimestamp('block');
+
+    if (isSeeking) {
+      videoRef.current.currentTime = newTime;
+    }
+
+    setShowTimestamp(true);
     setTimestampPosition(timeStampLoc);
   };
 
   const resetHoverLocation = () => {
     setHoverLocation(0);
-    setShowTimestamp('none');
+    setShowTimestamp(false);
+  };
+
+  const startSeek = () => {
+    setIsSeeking(true);
+  };
+
+  const endSeek = () => {
+    setIsSeeking(false);
   };
 
   return (
@@ -124,6 +140,8 @@ function Player({ src }: PlayerProps) {
           <div
             className="noteplayer__progress-area"
             onMouseMove={updateHoverLocation}
+            onMouseDown={startSeek}
+            onMouseUp={endSeek}
             onMouseLeave={resetHoverLocation}
             onClick={handleTimelineClick}
           >
@@ -145,8 +163,8 @@ function Player({ src }: PlayerProps) {
             </div>
             <div
               ref={timestampRef}
-              className="noteplayer__timestamp"
-              style={{ display: showTimestamp, left: timestampPosition + 'px' }}
+              className={`noteplayer__timestamp ${!showTimestamp ? 'noteplayer__timestamp--hide' : ''}`}
+              style={{ left: timestampPosition + 'px' }}
             >
               {formatTimestamp(hoverTime)} / {formatTimestamp(duration)}
             </div>

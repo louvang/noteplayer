@@ -89,4 +89,9 @@
   font-size: 9px;
   font-weight: 700;
   white-space: nowrap;
+  display: block;
+}
+
+.noteplayer__timestamp--hide {
+  display: none;
 }
